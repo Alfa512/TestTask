@@ -1,0 +1,159 @@
+﻿@{
+    Test.Models.User _currUser = new Test.Models.User();
+    _currUser = ViewBag.user;
+    var userImage = ViewBag.userImage;
+    string rootUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
+    string userImageUrl = rootUrl + "images/users/";
+    string postsImage = rootUrl + "images/posts/";
+    userImageUrl += userImage;
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Просмотр профиля";
+    ViewBag.h2 = "Просмотр профиля";
+    ViewBag.posttitle = "";
+    ViewBag.text = "Что у Вас нового?";
+    ViewBag.catPlaceholder = "Введите категорию";
+
+    var categories = ViewBag.categories;
+}
+
+<title> @ViewBag.Title </title>
+<h2>Просмотр профиля</h2>
+<div class="profilewrapper">
+    <div class="profilephoto">
+        <img src="@userImageUrl" class="img-rounded img-responsive" alt="@_currUser.name @_currUser.last_name">
+        </div>
+    <div class="profile">
+
+        <div class="name">@Html.ActionLink((_currUser.name + " " + _currUser.last_name), "userProfile", "Account", new { _currUser.login }, null)</div>
+        <div class="gender">Пол:	@_currUser.gender</div>
+        <div class="e_mail">E-Mail:		@_currUser.e_mail</div>
+        @{
+            if (_currUser.login == Convert.ToString(Session["login"]))
+            {
+                @Html.ActionLink("Изменить", "ChangeProfile", "Account", new { _currUser.id }, null)
+            }
+        }
+    </div>
+</div>
+
+<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
+
+@if (_currUser.login == Convert.ToString(Session["login"]))
+{
+    using (Html.BeginForm("AddPost", "Post", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="addPostForm">
+            <div class="row">
+                <div class="col-sm-2 col-lg-2"></div>
+                <div class="col-md-8 col-lg-8">
+                    <textarea name="posttitle" cols="30" rows="1">@ViewBag.posttitle</textarea>
+                </div>
+                <div class="col-sm-2 col-lg-2"></div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-2 col-lg-2"></div>
+                <div class="col-sm-8 col-lg-8">
+                    <textarea name="posttext" cols="150" rows="5" placeholder="@ViewBag.text"></textarea>
+                </div>
+                <div class="col-sm-2 col-lg-2"></div>
+            </div>
+            <div class="tdivider"> </div>
+            <div class="row">
+                <div class="col-sm-4 col-lg-2">
+                    <div class="btn-group">
+                        <a class="btn btn-default dropdown-toggle" id="catBtn" role="button" data-toggle="dropdown" href="#">
+                            Категория
+                            <span class="caret"></span>
+                        </a>
+
+                        <ul id="mitem" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <input id="minp" type="hidden" name="menu-val" value="-1" />
+                            @if (categories != null && categories.Count != 0)
+                            {
+                                foreach (var cat in categories)
+                                {
+                                    <li><a id="@cat.id" href="#" name="@cat.id">@cat.value</a></li>
+                                }
+                                
+                            }
+                            <li><a id="newCat" href="#" name="newCat">Другая</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-lg-4">
+                    <input id="catText" type="hidden" name="catText" placeholder="@ViewBag.catPlaceholder" value=""/>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-8 col-lg-6">
+                    Добавить фото:
+                    <input name="post_image" type="file">
+                </div>
+                <div class="col-sm-4  col-lg-6">
+                    <input type="submit" name="AddPost" class="btn btn-primary" value="Отправить">
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@if (ViewBag.posts != null)
+{
+    for (int i = ViewBag.posts.Count - 1; i >= 0; i--)
+    {
+        <br />
+    <div class="divider"></div>
+            <div class="post">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="posttitle">
+                            @ViewBag.posts[i].title
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="posttext">
+                            @ViewBag.posts[i].text
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        @if (ViewBag.postImageList[i] != null)
+                        { 
+                            <img src="@postsImage@ViewBag.postImageList[i].image_path" class="img-rounded img-responsive" alt="@ViewBag.posts[i].title">
+                        }
+                    </div>
+                </div>
+                <div class="tdivider"> </div>
+                <div class="row">
+
+                    <div class="col-md-6 col-lg-6"><h4>Категория: @ViewBag.catContext.getCategory(ViewBag.posts[i].category_id)</h4></div>
+                    <div class="col-md-2 col-lg-2">
+                        <p><a class="btn btn-default" href="~/Post/PostPage/?post=@ViewBag.posts[i].id">Подробнее &raquo;</a></p>
+                    </div>
+                    <div class="col-md-2 col-lg-2">
+                        @if (ViewBag.sessionUser != null && ViewBag.sessionUser.id == ViewBag.posts[i].id_user && ViewBag.posts[i].id_user == _currUser.id)
+                        {
+                            <p><a class="btn btn-info" href="~/Post/EditPost/?post=@ViewBag.posts[i].id">Редактировать</a></p>
+                        }
+                    </div>
+                    <div class="col-md-2 col-lg-2">
+                        @if (ViewBag.sessionUser != null && ViewBag.sessionUser.id == ViewBag.posts[i].id_user && ViewBag.posts[i].id_user == _currUser.id)
+                        {
+                            string postId = "dellPost" + ViewBag.posts[i].id;
+                            <button id="@postId" type="button" class="btn btn-danger" onclick="dellPost()">Удалить</button>
+                        }
+                    </div>
+                </div>
+            </div>
+    
+    }
+}
+<script type="text/javascript" src="~/Scripts/userPage-processor.js"></script>
+<script type="text/javascript" src="~/Scripts/test-functions.js"></script>

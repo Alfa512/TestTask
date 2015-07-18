@@ -1,0 +1,186 @@
+﻿
+@{
+    ViewBag.Title = ViewBag.post.title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string rootUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
+    string postsImage = rootUrl + "images/posts/";
+    var _postUser = ViewBag.postUser;
+    var usersContext = ViewBag.usersContext;
+    ViewBag.text = "Добавьте комментарий";
+}
+
+<title>@ViewBag.post.title</title>
+<h2>@ViewBag.post.title</h2>
+<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
+<div class="post">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="posttitle">
+                <h4>@ViewBag.post.title</h4>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="posttext">
+                @ViewBag.post.text
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            @if (ViewBag.postImage != null)
+            { 
+                <img src="@postsImage@ViewBag.postImage" class="img-rounded img-responsive" alt="@ViewBag.post.title">
+            }
+        </div>
+    </div>
+    <div class="tdivider"> </div>
+    <div class="row">
+
+        <div class="col-md-6 col-lg-8"><h4>Категория: @ViewBag.catContext.getCategory(ViewBag.post.category_id)</h4></div>
+        <div class="col-md-4 col-lg-2">
+            @if (ViewBag.currentUser != null && ViewBag.post.id_user == ViewBag.currentUser.id)
+            {
+                <p><a class="btn btn-info" href="~/Post/EditPost/?post=@ViewBag.post.id">Редактировать</a></p>
+            }
+        </div>
+        <div class="col-md-2 col-lg-2">
+            @if (ViewBag.currentUser != null && ViewBag.post.id_user == ViewBag.currentUser.id)
+            {
+                using (Html.BeginForm("dellPost", "Post", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                { 
+                    <input type="hidden" name="postId" value="@ViewBag.post.id" />
+                    <input type="submit" class="btn btn-danger" value="Удалить"/>
+                }
+            }
+            else
+            {
+                <a href="~/Account/userProfile?user=@usersContext.getUserById(@ViewBag.post.id_user).id">@usersContext.getUserById(@ViewBag.post.id_user).name @usersContext.getUserById(@ViewBag.post.id_user).last_name</a>
+            }
+        </div>
+
+    </div>
+</div>
+@if (ViewBag.currentUser != null)
+{
+    using (Html.BeginForm("AddComment", "Post", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="addCommentForm">
+            <div class="row">
+                <div class="col-sm-0 col-lg-0"></div>
+                <div class="col-sm-8 col-md-6 col-lg-4">
+                    <h4>Добавьте свой комментарий:</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-0 col-lg-0"></div>
+                <div class="col-sm-10 col-md-8 col-lg-6">
+                    <textarea name="commentText" cols="300" rows="5" placeholder="@ViewBag.text"></textarea>
+                </div>
+            </div>
+            <div class="tdivider"> </div>
+            <div class="row">
+                <div class="col-sm-8 col-md-6 col-lg-4">
+                    <input type="hidden" name="postId" value="@ViewBag.post.id" />
+                    <input type="hidden" name="userId" value="@ViewBag.currentUser.id" />
+                    <input type="hidden" name="postURL" value="~/Post/PostPage?post=@ViewBag.post.id" />
+                    <input type="submit" name="AddComment" class="btn btn-primary" value="Отправить">
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        Чтобы оставить свой комментарий, пожалуйста, <a href="~/Account/Login/">авторизируйтесь</a> или <a href="~/Account/Register/">зарегистрируйтесь!</a>
+    </div>
+}
+
+@if (ViewBag.postComments != null)
+{
+    for (int i = ViewBag.postComments.Count - 1; i >= 0; i--)
+    {
+        <div class="tdivider"></div>
+        <div class="postComment">
+            <div class="row">
+                <div class="col-md-7 col-lg-5">
+                    <div class="userComment">
+                        <a href="~/Account/userProfile?user=@usersContext.getUserById(@ViewBag.postComments[i].user_id).id">@usersContext.getUserById(@ViewBag.postComments[i].user_id).name @usersContext.getUserById(@ViewBag.postComments[i].user_id).last_name</a>
+                    </div>
+                </div>
+                <div class="col-md-2 col-lg-1">
+                    @if (ViewBag.currentUser != null && _postUser.login == ViewBag.currentUser.login)
+                    {   string commId = "dellComment" + ViewBag.postComments[i].id;
+                        <button id="@commId" type="button" class="btn btn-danger btn-xs" onclick="dellComment()">Удалить</button>
+                    }
+                </div>
+            </div>
+            <div class="tdivider"></div>
+            <div class="row">
+                <div class="col-md-8 col-lg-6">
+                    <div class="commentText">
+                        @ViewBag.postComments[i].text
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    if (ViewBag.pagination > 1)
+    {
+        <div class="pagination">
+            <ul>
+                @for (int i = 1; i <= ViewBag.pagination; i++)
+                {
+                    string currLink = rootUrl + "Post/PostPage?post=" + ViewBag.post.id + "&page=";
+                    if (i == 1 && ViewBag.currentPage == 1)
+                    {
+                        <li class="btn btn-default disabled"><a href="#">Prev</a></li>
+                        <li class="btn btn-default active"><a href="@currLink@i">@i</a></li>
+                    }
+                    else if (i == 1 && ViewBag.currentPage > 1 && ViewBag.currentPage <= ViewBag.pagination)
+                    {
+                        <li class="btn btn-default "><a href="@currLink@(ViewBag.currentPage - 1)">Prev</a></li>
+                        <li class="btn btn-default "><a href="@currLink@i">@i</a></li>
+                    }
+                    else if (i == 1 && ViewBag.currentPage == ViewBag.pagination)
+                    {
+                        <li class="btn btn-default "><a href="@currLink@(ViewBag.currentPage - 1)">Prev</a></li>
+                        <li class="btn btn-default "><a href="@currLink@i">@i</a></li>
+                    }
+                    else if (i > 1 && i < ViewBag.pagination)
+                    {
+                        if (i == ViewBag.currentPage)
+                        {
+                            <li class="btn btn-default active"><a href="@currLink@i">@i</a></li>
+                        }
+                        else
+                        {
+                            <li class="btn btn-default "><a href="@currLink@i">@i</a></li>
+                        }
+                    }
+                    else if (i == ViewBag.pagination && ViewBag.currentPage == ViewBag.pagination)
+                    {
+                        <li class="btn btn-default active"><a href="@currLink@i">@i</a></li>
+                        <li class="btn btn-default disabled"><a href="#">Next</a></li>
+                    }
+                    else if (i == ViewBag.pagination && ViewBag.currentPage > 1 && ViewBag.currentPage < ViewBag.pagination)
+                    {
+                        <li class="btn btn-default "><a href="@currLink@i">@i</a></li>
+                        <li class="btn btn-default "><a href="@currLink@(ViewBag.currentPage + 1)">Next</a></li>
+                    }
+                    else if (i == ViewBag.pagination && ViewBag.currentPage != ViewBag.pagination)
+                    {
+                        <li class="btn btn-default "><a href="@currLink@i">@i</a></li>
+                        <li class="btn btn-default "><a href="@currLink@(ViewBag.currentPage + 1)">Next</a></li>
+                    }
+                }
+            </ul>
+        </div>
+    }
+}
+
+<script type="text/javascript" src="~/Scripts/test-functions.js"></script>

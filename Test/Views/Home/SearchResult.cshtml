@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "Результаты поиска";
+    Test.Models.UsersContext usersContext = new Test.Models.UsersContext();
+    usersContext = ViewBag.usersContext;
+
+    Test.Models.User currUser = new Test.Models.User();
+    currUser = ViewBag.currUser;
+
+    var userImage = ViewBag.userImage;
+    string rootUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
+    string postsImage = rootUrl + "images/posts/";
+}
+
+<h1>Результаты поиска</h1>
+<title>ViewBag.Title = "Результаты поиска";</title>
+
+
+@if (ViewBag.posts != null)
+{
+    for (int i = ViewBag.posts.Count - 1; i >= 0; i--)
+    {
+        <br />
+        <div class="divider"></div>
+        <div class="post">
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <div class="posttitle">
+                        @ViewBag.posts[i].title
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <div class="posttext">
+                        @ViewBag.posts[i].text
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <div class="postuser">
+                        <a href="~/Account/userProfile?user=@ViewBag.usersContext.getUserById(ViewBag.posts[i].id_user).id">@ViewBag.usersContext.getUserById(ViewBag.posts[i].id_user).name @ViewBag.usersContext.getUserById(ViewBag.posts[i].id_user).last_name</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    @if (ViewBag.postImageList[i] != null)
+                    {
+                        <img src="@postsImage@ViewBag.postImageList[i].image_path" class="img-rounded img-responsive" alt="@ViewBag.posts[i].title">
+                    }
+                </div>
+            </div>
+            <div class="tdivider"> </div>
+            <div class="row">
+
+                <div class="col-md-6 col-lg-6"><h4>Категория: @ViewBag.catContext.getCategory(ViewBag.posts[i].category_id)</h4></div>
+                <div class="col-md-2 col-lg-2">
+                    <p><a class="btn btn-default" href="~/Post/PostPage/?post=@ViewBag.posts[i].id">Подробнее &raquo;</a></p>
+                </div>
+                <div class="col-md-2 col-lg-2">
+                    @if (currUser != null && ViewBag.posts[i].id_user == currUser.id)
+                    {
+                        <p><a class="btn btn-info" href="~/Post/EditPost/?post=@ViewBag.posts[i].id">Редактировать</a></p>
+                    }
+                </div>
+                <div class="col-md-2 col-lg-2">
+                    @if (currUser != null && ViewBag.posts[i].id_user == currUser.id)
+                    {
+                        string postId = "dellPost" + ViewBag.posts[i].id;
+                        <button id="@postId" type="button" class="btn btn-danger" onclick="dellPost()">Удалить</button>
+                    }
+                </div>
+            </div>
+        </div>
+
+    }
+}
+<script type="text/javascript" src="~/Scripts/test-processor.js"></script>

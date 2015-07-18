@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "ChangeProfile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<title>@ViewBag.Title</title>
+<h2>Настройки профиля</h2>
+
+@using (Html.BeginForm("ChangeProfile", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{ 
+    <table>
+        <tr>
+            <td>Имя:</td>
+            <td>
+                <input type="hidden" name="id" value="@ViewBag.user.id" />
+                <input type="hidden" name="login" value="@ViewBag.user.login" />
+                <input type="hidden" name="password" value="@ViewBag.user.password" />
+                <input type="text" name="name" value="@ViewBag.user.name" />
+            </td>
+        </tr>
+        <tr>
+            <td>Фамилия:</td>
+            <td>
+                <input type="text" name="last_name" value="@ViewBag.user.last_name" />
+            </td>
+        </tr>
+        <tr>
+            <td>Пол:</td>
+            <td>
+                <input type="text" name="gender" value="@ViewBag.user.gender" />
+            </td>
+        </tr>
+        <tr>
+            <td>E-Mail:</td>
+            <td>
+                <input type="text" name="e_mail" value="@ViewBag.user.e_mail" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="btn btn-default">
+                    Изображение:
+                    <input type="file" name="image" />
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" >
+                <input type="submit" name="changeok" class="btn btn-success" value="Готово" />
+
+                <input type="submit" name="changecancel" class="btn btn-danger" value="Отмена" />
+            </td>
+        </tr>
+    </table>
+}

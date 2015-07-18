@@ -1,0 +1,129 @@
+﻿/*@import url('demo.css');
+@import url('font-awesome.css');
+*/
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.searchString
+{
+	margin-top: 12px;
+}
+
+.posttitle
+{
+	text-align: center;
+}
+.posttext
+{
+	text-align: center;
+}
+
+.post
+{
+	width: auto;
+	/* border: 1px; */
+	border-radius: 5px 5px 5px 5px;
+	border-width: 1px;
+	border-color: rgb(190,190,190);
+	border-style: solid; 
+	padding: 5px;
+}
+
+.post img
+{
+	margin-left: auto;
+    margin-right: auto;
+}
+
+.row
+{
+	width: auto;
+}
+
+.addPostForm
+{
+	width: auto;
+	/* border: 1px; */
+	border-radius: 5px 5px 5px 5px;
+	border-width: 1px;
+	border-color: rgb(190,190,190);
+	border-style: solid; 
+	padding: 5px;
+}
+
+.addCommentForm
+{
+	/* display: inline-block; */
+	width: auto;
+	/* border: 1px; */
+	border-radius: 5px 5px 5px 5px;
+	border-width: 1px;
+	border-color: rgb(190,190,190);
+	border-style: solid; 
+	padding: 5px;
+}
+
+.postComment
+{
+	
+	width: auto;
+	/* border: 1px; */
+	border-radius: 5px 5px 5px 5px;
+	border-width: 1px;
+	border-color: rgb(190,190,190);
+	border-style: solid; 
+	padding: 5px;
+}
+
+.commentText
+{
+	width: auto;
+	border-radius: 5px 5px 5px 5px;
+	border-width: 1px;
+	border-color: rgb(190,190,190);
+	border-style: solid; 
+	padding: 5px;
+}
+
+.tdivider
+{
+	margin-bottom: 5px;
+	/* margin: 5px; */
+}
+
+.pagination
+{
+	text-align: center;
+	margin-left: auto;
+    margin-right: auto;
+}
+
+.pagination ul li
+{
+	margin-left: auto;
+    margin-right: auto;
+	display: inline-block;
+}
+
