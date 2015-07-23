@@ -65,7 +65,7 @@ namespace Test.Controllers
             return false;
         }
 
-        public string getSessionLogin() //Получение логина авторизаванного пользователя
+        public string GetSessionLogin() //Получение логина авторизаванного пользователя
         {
             return (string)Session["login"];
         }
@@ -87,23 +87,6 @@ namespace Test.Controllers
             {
                 return View(model);
             }
-
-            // Сбои при входе не приводят к блокированию учетной записи
-            // Чтобы ошибки при вводе пароля инициировали блокирование учетной записи, замените на shouldLockout: true
-            /*var result = await SignInManager.PasswordSignInAsync(model.Login, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Неудачная попытка входа.");
-                    return View(model);
-            }*/
 
             UsersContext usersContext = new UsersContext();
 
@@ -186,27 +169,11 @@ namespace Test.Controllers
                 LoginViewModel _model = new LoginViewModel();
                 _model.Login = model.Login;
                 _model.Password = model.Password;
-                if (usersContext.createUser(user) != null)
+                if (usersContext.CreateUser(user) != null)
                 {
                     await Login(_model, null);
                     return RedirectToAction("Index", "Home");
                 }
-
-                //var result = await UserManager.CreateAsync(user, model.Password);
-
-                /*if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // Дополнительные сведения о том, как включить подтверждение учетной записи и сброс пароля, см. по адресу: http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Отправка сообщения электронной почты с этой ссылкой
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Подтверждение учетной записи", "Подтвердите вашу учетную запись, щелкнув <a href=\"" + callbackUrl + "\">здесь</a>");
-
-                    return RedirectToAction("Index", "Home");
-                }
-                AddErrors(result);*/
             }
 
             // Появление этого сообщения означает наличие ошибки; повторное отображение формы
@@ -214,7 +181,7 @@ namespace Test.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult userProfile() // Загрузка представленя страницы пользователя
+        public ActionResult UserProfile() // Загрузка представленя страницы пользователя
         {
             if (Session == null || Session["isAuth"] == null || (bool)Session["isAuth"] == false) return RedirectToAction("Login", "Account");
             UsersContext _user = new UsersContext();
@@ -223,9 +190,9 @@ namespace Test.Controllers
             CategoriesContext catContext = new CategoriesContext();
 
             List<Categories> categories = new List<Categories>();
-            if (catContext.getAllCategories() != null)
+            if (catContext.GetAllCategories() != null)
             {
-                categories = catContext.getAllCategories().ToList();
+                categories = catContext.GetAllCategories().ToList();
                 ViewBag.categories = categories;
             }
             ViewBag.catContext = catContext;
@@ -234,22 +201,22 @@ namespace Test.Controllers
             if (Request.QueryString.Count == 0) s = 0;
             else
                 s = Convert.ToInt32(Request.QueryString["user"]);
-            if (s == null || s == 0) s = _user.getUserByLogin(Convert.ToString(Session["login"])).id;
+            if (s == null || s == 0) s = _user.GetUserByLogin(Convert.ToString(Session["login"])).id;
             User user = new User();
-            user = _user.getUserById(s);
+            user = _user.GetUserById(s);
 
             ViewBag.login = user.login;
             ViewBag.user = user;
             if (Session != null && Session["isAuth"] != null && (bool)Session["isAuth"] != false)
-                ViewBag.sessionUser = _user.getUserByLogin(Session["login"].ToString());
+                ViewBag.sessionUser = _user.GetUserByLogin(Session["login"].ToString());
 
             IEnumerable<Post> userPosts;
-            userPosts = postsContext.getPostsByUserId(user.id);
+            userPosts = postsContext.GetPostsByUserId(user.id);
 
             PostImageContext pic = new PostImageContext();
             List<Image> postImageList = new List<Image>();
             Image userImage = new Image();
-            userImage = userImageContext.getImageByUserId(user.id);
+            userImage = userImageContext.GetImageByUserId(user.id);
             if (userImage != null)
                 ViewBag.userImage = userImage.image_path;
             else
@@ -259,7 +226,7 @@ namespace Test.Controllers
             {
                 foreach (var p in userPosts)
                 {
-                    postImageList.Add(pic.getImageByPostId(p.id));
+                    postImageList.Add(pic.GetImageByPostId(p.id));
                 }
             }
             ViewBag.posts = userPosts;
@@ -275,7 +242,7 @@ namespace Test.Controllers
 
             UsersContext _user = new UsersContext();
             User user = new User();
-            user = _user.getUserByLogin((string)Session["login"]);
+            user = _user.GetUserByLogin((string)Session["login"]);
             ViewBag.user = user;
 
             
@@ -293,7 +260,7 @@ namespace Test.Controllers
             ImagesContext _image = new ImagesContext();
             UserImageContext _userImage = new UserImageContext();
             User user = new User();
-            user = _user.getUserByLogin((string)Session["login"]);
+            user = _user.GetUserByLogin((string)Session["login"]);
 
             ViewBag.user = user;
 
@@ -310,7 +277,7 @@ namespace Test.Controllers
                 string filename = user.id.ToString() + Path.GetExtension(file.FileName);
                 if (filename != null) file.SaveAs(path + filename);
 
-                if (_userImage.getImageByUserId(user.id) == null)
+                if (_userImage.GetImageByUserId(user.id) == null)
                 {
                     Image image = new Image();
                     image.image_path = filename;
@@ -320,7 +287,7 @@ namespace Test.Controllers
                 else
                 {
                     Image image = new Image();
-                    image = _userImage.getImageByUserId(user.id);
+                    image = _userImage.GetImageByUserId(user.id);
                     image.image_path = filename;
                     image = _image.EditImage(image);
                 }
@@ -330,7 +297,6 @@ namespace Test.Controllers
 
             try
             {
-
                 _user.Entry(user).State = EntityState.Modified;
                 _user.SaveChanges();
                 return RedirectToAction("userProfile", "Account");
@@ -377,13 +343,6 @@ namespace Test.Controllers
                     // Не показывать, что пользователь не существует или не подтвержден
                     return View("ForgotPasswordConfirmation");
                 }
-
-                // Дополнительные сведения о том, как включить подтверждение учетной записи и сброс пароля, см. по адресу: http://go.microsoft.com/fwlink/?LinkID=320771
-                // Отправка сообщения электронной почты с этой ссылкой
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Сброс пароля", "Сбросьте ваш пароль, щелкнув <a href=\"" + callbackUrl + "\">здесь</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // Появление этого сообщения означает наличие ошибки; повторное отображение формы

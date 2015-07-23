@@ -1,12 +1,11 @@
 ﻿
 @{
-    ViewBag.Title = ViewBag.post.title;
     Layout = "~/Views/Shared/_Layout.cshtml";
     string rootUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
     string postsImage = rootUrl + "images/posts/";
     var _postUser = ViewBag.postUser;
     var usersContext = ViewBag.usersContext;
-    ViewBag.text = "Добавьте комментарий";
+    string text = "Добавьте комментарий";
 }
 
 <title>@ViewBag.post.title</title>
@@ -77,7 +76,7 @@
             <div class="row">
                 <div class="col-sm-0 col-lg-0"></div>
                 <div class="col-sm-10 col-md-8 col-lg-6">
-                    <textarea name="commentText" cols="300" rows="5" placeholder="@ViewBag.text"></textarea>
+                    <textarea name="commentText" cols="300" rows="5" placeholder="@text"></textarea>
                 </div>
             </div>
             <div class="tdivider"> </div>

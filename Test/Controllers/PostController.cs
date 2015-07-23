@@ -30,32 +30,31 @@ namespace Test.Controllers
             CategoriesContext categoriesContext = new CategoriesContext();
 
             User currentUser = new User();
-            currentUser = usersContext.getUserByLogin((string)Session["login"]);
+            currentUser = usersContext.GetUserByLogin((string)Session["login"]);
 
             Post newPost = new Post();
             newPost.id_user = currentUser.id;
             newPost.title = Request.Form["posttitle"];
             newPost.text = Request.Form["posttext"];
-            //newPost.category_id = Convert.ToInt32(Request.Form["menu-val"]);
 
             if (Request.Form["menu-val"] == "newCat")
             {
                 Categories cat = new Categories();
                 cat.value = Request.Form["catText"];
-                newPost.category_id = categoriesContext.createCategory(cat).id;
+                newPost.category_id = categoriesContext.CreateCategory(cat).id;
             }
             else if(Convert.ToInt32(Request.Form["menu-val"]) == -1)
             {
-                if (categoriesContext.getCategoryByValue("Общая") == null)
+                if (categoriesContext.GetCategoryByValue("Общая") == null)
                 {
                     Categories cat = new Categories();
                     cat.value = "Общая";
-                    newPost.category_id = categoriesContext.createCategory(cat).id;
+                    newPost.category_id = categoriesContext.CreateCategory(cat).id;
                 }
                 else
                 {
                     Categories cat = new Categories();
-                    cat = categoriesContext.getCategoryByValue("Общая");
+                    cat = categoriesContext.GetCategoryByValue("Общая");
                     newPost.category_id = cat.id;
                 }
                 
@@ -90,13 +89,13 @@ namespace Test.Controllers
             UsersContext usersContext = new UsersContext();
             Post post = new Post();
             string url = "~/Post/PostPage?post=";
-            post = postsContext.getPostById(Convert.ToInt32(Request.QueryString["post"]));
+            post = postsContext.GetPostById(Convert.ToInt32(Request.QueryString["post"]));
             ViewBag.post = post;
-            if (post.id_user != usersContext.getUserByLogin(Session["login"].ToString()).id) return Redirect(url + post.id);
+            if (post.id_user != usersContext.GetUserByLogin(Session["login"].ToString()).id) return Redirect(url + post.id);
 
             CategoriesContext catContext = new CategoriesContext();
             List<Categories> categories = new List<Categories>();
-            categories = catContext.getAllCategories().ToList();
+            categories = catContext.GetAllCategories().ToList();
             ViewBag.categories = categories;
 
             return View();
@@ -114,7 +113,7 @@ namespace Test.Controllers
             string url = "~/Post/PostPage?post=";
 
             User currentUser = new User();
-            currentUser = usersContext.getUserByLogin((string)Session["login"]);
+            currentUser = usersContext.GetUserByLogin((string)Session["login"]);
 
             Post newPost = new Post();
             newPost.id = Convert.ToInt32(Request.Form["postId"]);
@@ -133,7 +132,7 @@ namespace Test.Controllers
                 string path = AppDomain.CurrentDomain.BaseDirectory + "images/posts/";
                 string filename = newPost.id.ToString() + Path.GetExtension(file.FileName);
                 if (filename != null) file.SaveAs(path + filename);
-                if(postImageContext.getImageByPostId(newPost.id) == null)
+                if(postImageContext.GetImageByPostId(newPost.id) == null)
                 {
                     Image image = new Image();
                     image.image_path = filename;
@@ -143,7 +142,7 @@ namespace Test.Controllers
                 else
                 {
                     Image image = new Image();
-                    image = postImageContext.getImageByPostId(newPost.id);
+                    image = postImageContext.GetImageByPostId(newPost.id);
                     image.image_path = filename;
                     image = imageContext.EditImage(image);
                 }
@@ -161,26 +160,26 @@ namespace Test.Controllers
             UsersContext usersContext = new UsersContext();
             User currentUser = new User();
             if (Session != null && Session["isAuth"] != null && (bool)Session["isAuth"] != false)
-                currentUser = usersContext.getUserByLogin(Session["login"].ToString());
+                currentUser = usersContext.GetUserByLogin(Session["login"].ToString());
             else
                 currentUser = null;
             ViewBag.currentUser = currentUser;
             ViewBag.usersContext = usersContext;
             Post post = new Post();
             if (Request.QueryString["post"] == null) return RedirectToAction("Index", "Home");
-            post = postsContext.getPostById(Convert.ToInt32(Request.QueryString["post"]));
+            post = postsContext.GetPostById(Convert.ToInt32(Request.QueryString["post"]));
             if (post == null) return RedirectToAction("Index", "Home");
-            User postUser = usersContext.getUserById(post.id_user);
+            User postUser = usersContext.GetUserById(post.id_user);
             ViewBag.postUser = postUser;
-            ViewBag.categories = catContext.getAllCategories().ToList();
+            ViewBag.categories = catContext.GetAllCategories().ToList();
             ViewBag.catContext = catContext;
             
             
             PostImageContext postImageContext = new PostImageContext();
-            if (postImageContext.getImageByPostId(post.id) != null)
-                ViewBag.postImage = postImageContext.getImageByPostId(post.id).image_path;
+            if (postImageContext.GetImageByPostId(post.id) != null)
+                ViewBag.postImage = postImageContext.GetImageByPostId(post.id).image_path;
             ViewBag.post = post;
-            IEnumerable<PostsComments> postComments = postsCommentsContext.getPostsCommentsByPostId(post.id);
+            IEnumerable<PostsComments> postComments = postsCommentsContext.GetPostsCommentsByPostId(post.id);
 
             int page = 1;
             if (Request.QueryString["page"] != null)
@@ -249,26 +248,26 @@ namespace Test.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public JsonResult getPosts() //Формирование списа постов для скрипта подгрузки
+        public JsonResult GetPosts() //Формирование списа постов для скрипта подгрузки
         {
             PostsContext postsContext = new PostsContext();
             PostImageContext postImageContext = new PostImageContext();
             UsersContext usersContext = new UsersContext();
             CategoriesContext catContext = new CategoriesContext();
-            IEnumerable<Post> posts = postsContext.getAllPosts();
+            IEnumerable<Post> posts = postsContext.GetAllPosts();
             ViewBag.usersContext = usersContext;
             ViewBag.catContext = catContext;
             ViewBag.posts = posts.ToList();
             User currUser = new User();
             if (Session != null && Session["isAuth"] != null && (bool)Session["isAuth"] != false)
-                currUser = usersContext.getUserByLogin(Session["login"].ToString());
+                currUser = usersContext.GetUserByLogin(Session["login"].ToString());
             else currUser = null;
 
             List<Post> sortedPosts = new List<Post>();
 
             int category = Convert.ToInt32(Request.Form["category"]);
             int startFrom = Convert.ToInt32(Request.Form["startFrom"]);
-            sortedPosts = postsContext.getPostsByUploading(startFrom, category);
+            sortedPosts = postsContext.GetPostsByUploading(startFrom, category);
 
             List<HTPosts> htPosts = new List<HTPosts>();
 
@@ -283,13 +282,13 @@ namespace Test.Controllers
 
                 hp.title = p.title;
                 hp.text = p.text;
-                hp.category = catContext.getCategoryById(p.category_id).value;
-                if (postImageContext.getImageByPostId(p.id) != null)
-                    hp.image_name = postImageContext.getImageByPostId(p.id).image_path;
+                hp.category = catContext.GetCategoryById(p.category_id).value;
+                if (postImageContext.GetImageByPostId(p.id) != null)
+                    hp.image_name = postImageContext.GetImageByPostId(p.id).image_path;
                 else
                     hp.image_name = "";
-                hp.userName = usersContext.getUserById(p.id_user).name;
-                hp.userLastName = usersContext.getUserById(p.id_user).last_name;
+                hp.userName = usersContext.GetUserById(p.id_user).name;
+                hp.userLastName = usersContext.GetUserById(p.id_user).last_name;
 
                 htPosts.Add(hp);
             }
@@ -328,7 +327,7 @@ namespace Test.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult dellComment() //Удаление комментария
+        public ActionResult DellComment() //Удаление комментария
         {
             if (Session == null || Session["isAuth"] == null || (bool)Session["isAuth"] == false) return RedirectToAction("Login", "Account");
 
@@ -336,17 +335,16 @@ namespace Test.Controllers
             PostsCommentsContext postsCommentsContext = new PostsCommentsContext();
             UsersContext usersContext = new UsersContext();
             PostsComments comment = new PostsComments();
-            comment = postsCommentsContext.getPostCommentById(Convert.ToInt32(Request.Form["commentId"]));
-            //if (comment == null || postsContext.getPostById(comment.post_id).id_user != usersContext.getUserByLogin(Session["login"].ToString()).id) return RedirectToAction("Index", "Home");
+            comment = postsCommentsContext.GetPostCommentById(Convert.ToInt32(Request.Form["commentId"]));
             if (comment == null) return RedirectToAction("Index", "Home");
-            postsCommentsContext.dellComment(comment.id);
+            postsCommentsContext.DellComment(comment.id);
             string url = "~/Post/PostPage?post=" + comment.post_id;
             return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult dellPost() //Удаление поста
+        public ActionResult DellPost() //Удаление поста
         {
             if (Session == null || Session["isAuth"] == null || (bool)Session["isAuth"] == false) return RedirectToAction("Login", "Account");
 
@@ -354,9 +352,9 @@ namespace Test.Controllers
             PostsCommentsContext postsCommentsContext = new PostsCommentsContext();
             UsersContext usersContext = new UsersContext();
             Post post = new Post();
-            post = postsContext.getPostById(Convert.ToInt32(Request.Form["postId"]));
-            if (post == null || post.id_user != usersContext.getUserByLogin(Session["login"].ToString()).id) return RedirectToAction("Index", "Home");
-            postsContext.dellPost(post.id);
+            post = postsContext.GetPostById(Convert.ToInt32(Request.Form["postId"]));
+            if (post == null || post.id_user != usersContext.GetUserByLogin(Session["login"].ToString()).id) return RedirectToAction("Index", "Home");
+            postsContext.DellPost(post.id);
             string url = "~/Post/PostPage?post=" + post.id;
             return RedirectToAction("Index", "Home");
         }

@@ -158,6 +158,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -166,17 +167,15 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Categories.cs" />
-    <Compile Include="Models\Config.cs" />
+    <Compile Include="Models\CategoriesModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\Images.cs" />
+    <Compile Include="Models\ImageModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Menu.cs" />
-    <Compile Include="Models\Post.cs" />
-    <Compile Include="Models\PostImage.cs" />
-    <Compile Include="Models\PostsComments.cs" />
-    <Compile Include="Models\User.cs" />
-    <Compile Include="Models\UserImage.cs" />
+    <Compile Include="Models\PostModel.cs" />
+    <Compile Include="Models\PostImageModel.cs" />
+    <Compile Include="Models\PostsCommentsModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\UserImageModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -240,7 +239,7 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Account\userProfile.cshtml" />
+    <Content Include="Views\Account\UserProfile.cshtml" />
     <Content Include="Views\Account\ChangeProfile.cshtml" />
     <Content Include="Views\Post\PostPage.cshtml" />
     <Content Include="Views\Post\EditPost.cshtml" />

@@ -13,7 +13,7 @@
 		var body = 'commentId=' + commentId;
 		
 		var rootUrl = location.host;
-		var url = 'http://' + rootUrl + '/Post/dellComment';
+		var url = 'http://' + rootUrl + '/Post/DellComment';
 
 		xhr.open('POST', url, true)
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
@@ -36,7 +36,7 @@
 		var body = 'postId=' + postId;
 		
 		var rootUrl = location.host;
-		var url = 'http://' + rootUrl + '/Post/dellPost';
+		var url = 'http://' + rootUrl + '/Post/DellPost';
 
 		xhr.open('POST', url, true)
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')

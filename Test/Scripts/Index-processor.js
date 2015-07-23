@@ -67,11 +67,11 @@
 		var categoryInp = document.getElementById('minp');
 		var category = categoryInp.value;
 		var rootUrl = location.host;
-		var url = 'http://' + rootUrl + '/Post/getPosts';
+		var url = 'http://' + rootUrl + '/Post/GetPosts';
 		var data = {"startFrom" : startFrom, "category" : category};
 		$.ajax({
 			/* адрес файла-обработчика запроса */
-			url: '/Post/getPosts',
+		    url: '/Post/GetPosts',
 			/* метод отправки данных */
 			method: 'POST',
 			/* данные, которые мы передаем в*/

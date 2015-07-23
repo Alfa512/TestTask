@@ -14,18 +14,18 @@ namespace Test.Controllers
             PostsContext postsContext = new PostsContext();
             UsersContext usersContext = new UsersContext();
             CategoriesContext catContext = new CategoriesContext();
-            IEnumerable<Post> posts = postsContext.getAllPosts();
+            IEnumerable<Post> posts = postsContext.GetAllPosts();
             List<Categories> categories = new List<Categories>();
-            if (catContext.getAllCategories() != null)
+            if (catContext.GetAllCategories() != null)
             {
-                categories = catContext.getAllCategories().ToList();
+                categories = catContext.GetAllCategories().ToList();
                 ViewBag.categories = categories;
             }
             ViewBag.usersContext = usersContext;
             ViewBag.catContext = catContext;
             User currUser = new User();
             if (Session != null && Session["isAuth"] != null && (bool)Session["isAuth"] != false)
-                currUser = usersContext.getUserByLogin(Session["login"].ToString());
+                currUser = usersContext.GetUserByLogin(Session["login"].ToString());
             else currUser = null;
             ViewBag.currUser = currUser;
 
@@ -36,7 +36,7 @@ namespace Test.Controllers
             {
                 foreach (var p in posts)
                 {
-                    postImageList.Add(pic.getImageByPostId(p.id));
+                    postImageList.Add(pic.GetImageByPostId(p.id));
                 }
             }
             if (postImageList != null)
@@ -72,7 +72,7 @@ namespace Test.Controllers
             ViewBag.posts = foundPosts;
             User currUser = new User();
             if (Session != null && Session["isAuth"] != null && (bool)Session["isAuth"] != false)
-                currUser = usersContext.getUserByLogin(Session["login"].ToString());
+                currUser = usersContext.GetUserByLogin(Session["login"].ToString());
             else currUser = null;
             ViewBag.currUser = currUser;
 
@@ -83,7 +83,7 @@ namespace Test.Controllers
             {
                 foreach (var p in foundPosts)
                 {
-                    postImageList.Add(pic.getImageByPostId(p.id));
+                    postImageList.Add(pic.GetImageByPostId(p.id));
                 }
             }
             if (postImageList != null)
@@ -100,7 +100,7 @@ namespace Test.Controllers
             string[] _words = __words.Split(' ', ',', '.');
             List<Post> foundPosts = new List<Post>();
             PostsContext postsContext = new PostsContext();
-            IEnumerable<Post> posts = postsContext.getAllPosts();
+            IEnumerable<Post> posts = postsContext.GetAllPosts();
             foreach (var u in posts)
             {
                 foreach (var w in _words)

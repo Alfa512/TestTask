@@ -8,16 +8,14 @@
     userImageUrl += userImage;
 
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Просмотр профиля";
-    ViewBag.h2 = "Просмотр профиля";
-    ViewBag.posttitle = "";
-    ViewBag.text = "Что у Вас нового?";
-    ViewBag.catPlaceholder = "Введите категорию";
+    string posttitle = "";
+    string text = "Что у Вас нового?";
+    string catPlaceholder = "Введите категорию";
 
     var categories = ViewBag.categories;
 }
 
-<title> @ViewBag.Title </title>
+<title>Просмотр профиля</title>
 <h2>Просмотр профиля</h2>
 <div class="profilewrapper">
     <div class="profilephoto">
@@ -47,7 +45,7 @@
             <div class="row">
                 <div class="col-sm-2 col-lg-2"></div>
                 <div class="col-md-8 col-lg-8">
-                    <textarea name="posttitle" cols="30" rows="1">@ViewBag.posttitle</textarea>
+                    <textarea name="posttitle" cols="30" rows="1">@posttitle</textarea>
                 </div>
                 <div class="col-sm-2 col-lg-2"></div>
             </div>
@@ -55,7 +53,7 @@
             <div class="row">
                 <div class="col-sm-2 col-lg-2"></div>
                 <div class="col-sm-8 col-lg-8">
-                    <textarea name="posttext" cols="150" rows="5" placeholder="@ViewBag.text"></textarea>
+                    <textarea name="posttext" cols="150" rows="5" placeholder="@text"></textarea>
                 </div>
                 <div class="col-sm-2 col-lg-2"></div>
             </div>
@@ -83,7 +81,7 @@
                     </div>
                 </div>
                 <div class="col-sm-4 col-lg-4">
-                    <input id="catText" type="hidden" name="catText" placeholder="@ViewBag.catPlaceholder" value=""/>
+                    <input id="catText" type="hidden" name="catText" placeholder="@catPlaceholder" value=""/>
                 </div>
             </div>
             <br />
