@@ -23,11 +23,11 @@ namespace Test.Controllers
         public ActionResult AddPost() //Обработка данных для добавления поста
         {
             if (Session == null || Session["isAuth"] == null || (bool)Session["isAuth"] == false) return RedirectToAction("Login", "Account");
-            PostsContext postsContext = new PostsContext();
-            PostImageContext postImageContext = new PostImageContext();
-            UsersContext usersContext = new UsersContext();
-            ImagesContext imageContext = new ImagesContext();
-            CategoriesContext categoriesContext = new CategoriesContext();
+            IPostsContext postsContext = new PostsContext();
+            IPostImageContext postImageContext = new PostImageContext();
+            IUsersContext usersContext = new UsersContext();
+            IImagesContext imageContext = new ImagesContext();
+            ICategoriesContext categoriesContext = new CategoriesContext();
 
             User currentUser = new User();
             currentUser = usersContext.GetUserByLogin((string)Session["login"]);
@@ -84,16 +84,16 @@ namespace Test.Controllers
         [AllowAnonymous]
         public ActionResult EditPost() //Загрузка формы изменения поста
         {
-            PostsContext postsContext = new PostsContext();
-            PostImageContext postImageContext = new PostImageContext();
-            UsersContext usersContext = new UsersContext();
+            IPostsContext postsContext = new PostsContext();
+            IPostImageContext postImageContext = new PostImageContext();
+            IUsersContext usersContext = new UsersContext();
             Post post = new Post();
             string url = "~/Post/PostPage?post=";
             post = postsContext.GetPostById(Convert.ToInt32(Request.QueryString["post"]));
             ViewBag.post = post;
             if (post.id_user != usersContext.GetUserByLogin(Session["login"].ToString()).id) return Redirect(url + post.id);
 
-            CategoriesContext catContext = new CategoriesContext();
+            ICategoriesContext catContext = new CategoriesContext();
             List<Categories> categories = new List<Categories>();
             categories = catContext.GetAllCategories().ToList();
             ViewBag.categories = categories;
@@ -106,10 +106,10 @@ namespace Test.Controllers
         public ActionResult EditPostF() //Обработка данных для изменения поста
         {
             if (Session == null || Session["isAuth"] == null || (bool)Session["isAuth"] == false) return RedirectToAction("Login", "Account");
-            PostsContext postsContext = new PostsContext();
-            PostImageContext postImageContext = new PostImageContext();
-            UsersContext usersContext = new UsersContext();
-            ImagesContext imageContext = new ImagesContext();
+            IPostsContext postsContext = new PostsContext();
+            IPostImageContext postImageContext = new PostImageContext();
+            IUsersContext usersContext = new UsersContext();
+            IImagesContext imageContext = new ImagesContext();
             string url = "~/Post/PostPage?post=";
 
             User currentUser = new User();
@@ -154,10 +154,10 @@ namespace Test.Controllers
         public ActionResult PostPage() //Загрузка данных новостной страницы
         {
             if (Request.QueryString["post"] == null) RedirectToAction("Index", "Home");
-            CategoriesContext catContext = new CategoriesContext();
-            PostsContext postsContext = new PostsContext();
-            PostsCommentsContext postsCommentsContext = new PostsCommentsContext();
-            UsersContext usersContext = new UsersContext();
+            ICategoriesContext catContext = new CategoriesContext();
+            IPostsContext postsContext = new PostsContext();
+            IPostsCommentsContext postsCommentsContext = new PostsCommentsContext();
+            IUsersContext usersContext = new UsersContext();
             User currentUser = new User();
             if (Session != null && Session["isAuth"] != null && (bool)Session["isAuth"] != false)
                 currentUser = usersContext.GetUserByLogin(Session["login"].ToString());
@@ -175,7 +175,7 @@ namespace Test.Controllers
             ViewBag.catContext = catContext;
             
             
-            PostImageContext postImageContext = new PostImageContext();
+            IPostImageContext postImageContext = new PostImageContext();
             if (postImageContext.GetImageByPostId(post.id) != null)
                 ViewBag.postImage = postImageContext.GetImageByPostId(post.id).image_path;
             ViewBag.post = post;
@@ -250,10 +250,10 @@ namespace Test.Controllers
         [AllowAnonymous]
         public JsonResult GetPosts() //Формирование списа постов для скрипта подгрузки
         {
-            PostsContext postsContext = new PostsContext();
-            PostImageContext postImageContext = new PostImageContext();
-            UsersContext usersContext = new UsersContext();
-            CategoriesContext catContext = new CategoriesContext();
+            IPostsContext postsContext = new PostsContext();
+            IPostImageContext postImageContext = new PostImageContext();
+            IUsersContext usersContext = new UsersContext();
+            ICategoriesContext catContext = new CategoriesContext();
             IEnumerable<Post> posts = postsContext.GetAllPosts();
             ViewBag.usersContext = usersContext;
             ViewBag.catContext = catContext;
@@ -304,9 +304,9 @@ namespace Test.Controllers
         {
             if (Session == null || Session["isAuth"] == null || (bool)Session["isAuth"] == false) return RedirectToAction("Login", "Account");
 
-            PostsContext postsContext = new PostsContext();
-            PostsCommentsContext postsCommentsContext = new PostsCommentsContext();
-            UsersContext usersContext = new UsersContext();
+            IPostsContext postsContext = new PostsContext();
+            IPostsCommentsContext postsCommentsContext = new PostsCommentsContext();
+            IUsersContext usersContext = new UsersContext();
             PostsComments comment = new PostsComments();
             int postId = Convert.ToInt32(Request.Form["postId"]);
             if (postId == 0) return RedirectToAction("Index", "Home");
@@ -331,9 +331,9 @@ namespace Test.Controllers
         {
             if (Session == null || Session["isAuth"] == null || (bool)Session["isAuth"] == false) return RedirectToAction("Login", "Account");
 
-            PostsContext postsContext = new PostsContext();
-            PostsCommentsContext postsCommentsContext = new PostsCommentsContext();
-            UsersContext usersContext = new UsersContext();
+            IPostsContext postsContext = new PostsContext();
+            IPostsCommentsContext postsCommentsContext = new PostsCommentsContext();
+            IUsersContext usersContext = new UsersContext();
             PostsComments comment = new PostsComments();
             comment = postsCommentsContext.GetPostCommentById(Convert.ToInt32(Request.Form["commentId"]));
             if (comment == null) return RedirectToAction("Index", "Home");
@@ -348,9 +348,9 @@ namespace Test.Controllers
         {
             if (Session == null || Session["isAuth"] == null || (bool)Session["isAuth"] == false) return RedirectToAction("Login", "Account");
 
-            PostsContext postsContext = new PostsContext();
-            PostsCommentsContext postsCommentsContext = new PostsCommentsContext();
-            UsersContext usersContext = new UsersContext();
+            IPostsContext postsContext = new PostsContext();
+            IPostsCommentsContext postsCommentsContext = new PostsCommentsContext();
+            IUsersContext usersContext = new UsersContext();
             Post post = new Post();
             post = postsContext.GetPostById(Convert.ToInt32(Request.Form["postId"]));
             if (post == null || post.id_user != usersContext.GetUserByLogin(Session["login"].ToString()).id) return RedirectToAction("Index", "Home");

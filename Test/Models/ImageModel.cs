@@ -8,7 +8,15 @@ using System.Data.Entity;
 
 namespace Test.Models
 {
-    public class ImagesContext : DbContext
+    public interface IImagesContext
+    {
+        Image GetImageById(int id);
+        Image AddImage(string image_path);
+        Image EditImage(Image image);
+
+    }
+
+    public class ImagesContext : DbContext, IImagesContext
     {
         public ImagesContext()
             : base("ConnectionToTest")

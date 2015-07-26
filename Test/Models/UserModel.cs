@@ -9,7 +9,16 @@ using System.Web.Helpers;
 
 namespace Test.Models
 {
-    public class UsersContext : DbContext
+    public interface IUsersContext
+    {
+        User GetUserById(int id);
+        User GetUserByLogin(string login);
+        User CreateUser(User _user);
+        bool ValidateUser(string login, string password);
+        User EditUser(User user);
+    }
+
+    public class UsersContext : DbContext, IUsersContext
     {
         public UsersContext()
             : base("ConnectionToTest")
@@ -85,6 +94,14 @@ namespace Test.Models
                 }
             }
             return isValid;
+        }
+
+        public User EditUser(User user)
+        {
+            UsersContext _db = new UsersContext();
+            _db.Entry(user).State = EntityState.Modified;
+            _db.SaveChanges();
+            return user;
         }
     }
 

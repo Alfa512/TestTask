@@ -8,7 +8,15 @@ using System.Data.Entity;
 
 namespace Test.Models
 {
-    public class UserImageContext : DbContext
+    public interface IUserImageContext
+    {
+        UserImage GetUserImageById(int id);
+        IEnumerable<UserImage> GetUserImageByUserId(int user_id);
+        Image GetImageByUserId(int user_id);
+        UserImage AddUserImage(int user_id, int image_id); // Возвращает только что добавленную запись
+    }
+
+    public class UserImageContext : DbContext, IUserImageContext
     {
         public UserImageContext()
             : base("ConnectionToTest")
@@ -16,7 +24,7 @@ namespace Test.Models
         }
 
         UserImage image = new UserImage();
-        ImagesContext imagesContext = new ImagesContext();
+        IImagesContext imagesContext = new ImagesContext();
 
         public DbSet<UserImage> UserImages { get; set; }
 

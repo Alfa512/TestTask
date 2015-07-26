@@ -11,9 +11,9 @@ namespace Test.Controllers
     {
         public ActionResult Index() //Загрузка главной страницы
         {
-            PostsContext postsContext = new PostsContext();
-            UsersContext usersContext = new UsersContext();
-            CategoriesContext catContext = new CategoriesContext();
+            IPostsContext postsContext = new PostsContext();
+            IUsersContext usersContext = new UsersContext();
+            ICategoriesContext catContext = new CategoriesContext();
             IEnumerable<Post> posts = postsContext.GetAllPosts();
             List<Categories> categories = new List<Categories>();
             if (catContext.GetAllCategories() != null)
@@ -29,7 +29,7 @@ namespace Test.Controllers
             else currUser = null;
             ViewBag.currUser = currUser;
 
-            PostImageContext pic = new PostImageContext();
+            IPostImageContext pic = new PostImageContext();
             List<Image> postImageList = new List<Image>();
 
             if (posts != null)
@@ -64,9 +64,9 @@ namespace Test.Controllers
             if (words == null) words = "";
             List<Post> foundPosts = SearchPosts(words);
 
-            PostsContext postsContext = new PostsContext();
-            UsersContext usersContext = new UsersContext();
-            CategoriesContext catContext = new CategoriesContext();
+            IPostsContext postsContext = new PostsContext();
+            IUsersContext usersContext = new UsersContext();
+            ICategoriesContext catContext = new CategoriesContext();
             ViewBag.usersContext = usersContext;
             ViewBag.catContext = catContext;
             ViewBag.posts = foundPosts;
@@ -76,7 +76,7 @@ namespace Test.Controllers
             else currUser = null;
             ViewBag.currUser = currUser;
 
-            PostImageContext pic = new PostImageContext();
+            IPostImageContext pic = new PostImageContext();
             List<Image> postImageList = new List<Image>();
 
             if (foundPosts != null)
@@ -99,7 +99,7 @@ namespace Test.Controllers
             string __words = words.Trim();
             string[] _words = __words.Split(' ', ',', '.');
             List<Post> foundPosts = new List<Post>();
-            PostsContext postsContext = new PostsContext();
+            IPostsContext postsContext = new PostsContext();
             IEnumerable<Post> posts = postsContext.GetAllPosts();
             foreach (var u in posts)
             {

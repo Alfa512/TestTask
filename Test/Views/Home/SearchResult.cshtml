@@ -1,5 +1,5 @@
 ﻿@{
-    Test.Models.UsersContext usersContext = new Test.Models.UsersContext();
+    Test.Models.IUsersContext usersContext = new Test.Models.UsersContext();
     usersContext = ViewBag.usersContext;
 
     Test.Models.User currUser = new Test.Models.User();
@@ -39,7 +39,7 @@
             <div class="row">
                 <div class="col-md-12 col-lg-12">
                     <div class="postuser">
-                        <a href="~/Account/userProfile?user=@ViewBag.usersContext.getUserById(ViewBag.posts[i].id_user).id">@ViewBag.usersContext.getUserById(ViewBag.posts[i].id_user).name @ViewBag.usersContext.getUserById(ViewBag.posts[i].id_user).last_name</a>
+                        <a href="~/Account/userProfile?user=@ViewBag.usersContext.GetUserById(ViewBag.posts[i].id_user).id">@ViewBag.usersContext.GetUserById(ViewBag.posts[i].id_user).name @ViewBag.usersContext.GetUserById(ViewBag.posts[i].id_user).last_name</a>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
             <div class="tdivider"> </div>
             <div class="row">
 
-                <div class="col-md-6 col-lg-6"><h4>Категория: @ViewBag.catContext.getCategory(ViewBag.posts[i].category_id)</h4></div>
+                <div class="col-md-6 col-lg-6"><h4>Категория: @ViewBag.catContext.GetCategory(ViewBag.posts[i].category_id)</h4></div>
                 <div class="col-md-2 col-lg-2">
                     <p><a class="btn btn-default" href="~/Post/PostPage/?post=@ViewBag.posts[i].id">Подробнее &raquo;</a></p>
                 </div>

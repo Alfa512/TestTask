@@ -88,7 +88,7 @@ namespace Test.Controllers
                 return View(model);
             }
 
-            UsersContext usersContext = new UsersContext();
+            IUsersContext usersContext = new UsersContext();
 
             if (usersContext.ValidateUser(model.Login, model.Password))
             {
@@ -165,7 +165,7 @@ namespace Test.Controllers
             if (ModelState.IsValid)
             {
                 var user = new User { e_mail = model.Email, login = model.Login, password = model.Password };
-                UsersContext usersContext = new UsersContext();
+                IUsersContext usersContext = new UsersContext();
                 LoginViewModel _model = new LoginViewModel();
                 _model.Login = model.Login;
                 _model.Password = model.Password;
@@ -184,10 +184,10 @@ namespace Test.Controllers
         public ActionResult UserProfile() // Загрузка представленя страницы пользователя
         {
             if (Session == null || Session["isAuth"] == null || (bool)Session["isAuth"] == false) return RedirectToAction("Login", "Account");
-            UsersContext _user = new UsersContext();
-            PostsContext postsContext = new PostsContext();
-            UserImageContext userImageContext = new UserImageContext();
-            CategoriesContext catContext = new CategoriesContext();
+            IUsersContext _user = new UsersContext();
+            IPostsContext postsContext = new PostsContext();
+            IUserImageContext userImageContext = new UserImageContext();
+            ICategoriesContext catContext = new CategoriesContext();
 
             List<Categories> categories = new List<Categories>();
             if (catContext.GetAllCategories() != null)
@@ -213,7 +213,7 @@ namespace Test.Controllers
             IEnumerable<Post> userPosts;
             userPosts = postsContext.GetPostsByUserId(user.id);
 
-            PostImageContext pic = new PostImageContext();
+            IPostImageContext pic = new PostImageContext();
             List<Image> postImageList = new List<Image>();
             Image userImage = new Image();
             userImage = userImageContext.GetImageByUserId(user.id);
@@ -240,7 +240,7 @@ namespace Test.Controllers
         {
             if (Session == null || Session["isAuth"] == null || (bool)Session["isAuth"] == false) return RedirectToAction("Login", "Account");
 
-            UsersContext _user = new UsersContext();
+            IUsersContext _user = new UsersContext();
             User user = new User();
             user = _user.GetUserByLogin((string)Session["login"]);
             ViewBag.user = user;
@@ -256,9 +256,9 @@ namespace Test.Controllers
         {
             if (Session == null || Session["isAuth"] == null || (bool)Session["isAuth"] == false) return RedirectToAction("Login", "Account");
 
-            UsersContext _user = new UsersContext();
-            ImagesContext _image = new ImagesContext();
-            UserImageContext _userImage = new UserImageContext();
+            IUsersContext _user = new UsersContext();
+            IImagesContext _image = new ImagesContext();
+            IUserImageContext _userImage = new UserImageContext();
             User user = new User();
             user = _user.GetUserByLogin((string)Session["login"]);
 
@@ -297,8 +297,7 @@ namespace Test.Controllers
 
             try
             {
-                _user.Entry(user).State = EntityState.Modified;
-                _user.SaveChanges();
+                _user.EditUser(user);
                 return RedirectToAction("userProfile", "Account");
             }
             catch

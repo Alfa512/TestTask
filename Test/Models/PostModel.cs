@@ -9,7 +9,18 @@ using System.Data.SqlClient;
 
 namespace Test.Models
 {
-    public class PostsContext : DbContext
+    public interface IPostsContext
+    {
+        IEnumerable<Post> GetAllPosts();
+        Post GetPostById(int id);
+        IEnumerable<Post> GetPostsByUserId(int id_user);
+        List<Post> GetPostsByUploading(int startFrom, int category);
+        Post AddPost(Post newPost);
+        Post EditPost(Post newPost);
+        bool DellPost(int id);
+    }
+
+    public class PostsContext : DbContext, IPostsContext
     {
         public PostsContext()
             : base("ConnectionToTest")

@@ -2,6 +2,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var categories = ViewBag.categories;
+    Test.Models.ICategoriesContext catContext = new Test.Models.CategoriesContext();
 }
 
 <title>Редактирование статьи</title>
@@ -33,7 +34,7 @@
         <div class="col-sm-4 col-lg-2">
             <div class="btn-group">
                 <a class="btn btn-default dropdown-toggle" id="catBtn" role="button" data-toggle="dropdown" href="#">
-                    Категория
+                    Категория: @catContext.GetCategoryById(ViewBag.post.category_id).value
                     <span class="caret"></span>
                 </a>
 

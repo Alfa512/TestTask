@@ -8,14 +8,24 @@ using System.Data.Entity;
 
 namespace Test.Models
 {
-    public class PostsCommentsContext : DbContext
+    public interface IPostsCommentsContext
+    {
+        PostsComments GetPostCommentById(int id);
+        IEnumerable<PostsComments> GetPostsCommentsByPostId(int post_id);
+        IEnumerable<PostsComments> GetPostsCommentsByUserId(int user_id);
+        IEnumerable<PostsComments> GetPostCommentsByUserId(int post_id, int user_id);
+        bool DellComment(int id);
+        PostsComments AddPostComment(PostsComments newPostComment);
+    }
+
+    public class PostsCommentsContext : DbContext, IPostsCommentsContext
     {
         public PostsCommentsContext()
             : base("ConnectionToTest")
         {
         }
 
-        PostsContext postContext = new PostsContext();
+        IPostsContext postContext = new PostsContext();
 
         public DbSet<PostsComments> posts_comments { get; set; }
 

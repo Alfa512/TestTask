@@ -9,17 +9,35 @@ using System.Web.Helpers;
 
 namespace Test.Models
 {
-    public class CategoriesContext : DbContext
+
+    public interface ICategoriesContext
+    {
+        /*public ICategoriesContext()
+            : base("ConnectionToTest")
+        {
+        }*/
+
+        IEnumerable<Categories> GetAllCategories();
+        Categories GetCategoryById(int id);
+        Categories GetCategoryByValue(string value);
+        Categories CreateCategory(Categories _category);
+        string GetCategory(int id);
+
+    }
+    public class CategoriesContext : DbContext, ICategoriesContext
     {
         public CategoriesContext()
             : base("ConnectionToTest")
         {
         }
 
-        Categories Categories = new Categories();
+       /*public CategoriesContext()
+        {
+        }*/
 
+        public Categories Categories = new Categories();
         public DbSet<Categories> categories { get; set; }
-
+        
         public IEnumerable<Categories> GetAllCategories()
         {
             if (categories.Count() != 0)
